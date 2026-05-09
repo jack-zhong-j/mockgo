@@ -1,0 +1,197 @@
+.home-page {
+  position: relative;
+  min-height: calc(100vh - 88px);
+}
+
+.map-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 88px;
+  background: #E8E4DE;
+}
+
+.search-bar {
+  position: fixed;
+  top: 64px;
+  left: 16px;
+  right: 16px;
+  z-index: 20;
+  background: var(--card);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-md);
+}
+
+.search-bar svg {
+  width: 18px;
+  height: 18px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.search-bar input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.coord-input-bar {
+  position: fixed;
+  bottom: 100px;
+  left: 16px;
+  right: 16px;
+  z-index: 20;
+  display: flex;
+  gap: 10px;
+}
+
+.coord-input-bar .input {
+  flex: 1;
+}
+
+.coord-display {
+  position: fixed;
+  top: 120px;
+  left: 16px;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coord-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--accent-light);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coord-icon svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+
+.coord-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.mock-indicator {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  background: var(--green-gradient);
+  color: white;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.mock-toggle {
+  position: fixed;
+  bottom: 180px;
+  left: 16px;
+  right: 16px;
+  z-index: 20;
+}
+
+.mock-toggle-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mock-toggle-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mock-toggle-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mock-toggle-icon.off {
+  background: var(--bg-warm);
+}
+
+.mock-toggle-icon.on {
+  background: var(--green-light);
+}
+
+.mock-toggle-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.mock-toggle-icon.off svg {
+  color: var(--text-tertiary);
+}
+
+.mock-toggle-icon.on svg {
+  color: var(--green);
+}
+
+.mock-toggle-text h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.mock-toggle-text p {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}

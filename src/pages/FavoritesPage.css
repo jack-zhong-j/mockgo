@@ -1,0 +1,155 @@
+.favorites-page .search-filter {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.favorites-page .search-filter svg {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+}
+
+.favorites-page .search-filter input {
+  padding-left: 40px;
+}
+
+.fav-tags {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+}
+
+.fav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fav-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.fav-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.fav-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.fav-icon.blue {
+  background: var(--accent-light);
+}
+
+.fav-icon.blue svg {
+  color: var(--accent);
+}
+
+.fav-icon.green {
+  background: var(--green-light);
+}
+
+.fav-icon.green svg {
+  color: var(--green);
+}
+
+.fav-icon.orange {
+  background: var(--orange-light);
+}
+
+.fav-icon.orange svg {
+  color: var(--orange);
+}
+
+.fav-icon.purple {
+  background: var(--purple-light);
+}
+
+.fav-icon.purple svg {
+  color: var(--purple);
+}
+
+.fav-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fav-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.fav-info p {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fav-coord {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.fav-delete {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.fav-delete:hover {
+  background: var(--red-light);
+}
+
+.fav-delete svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-tertiary);
+}
+
+.fav-delete:hover svg {
+  color: var(--red);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-tertiary);
+}
+
+.empty-state svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 14px;
+}

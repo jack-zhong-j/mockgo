@@ -1,0 +1,201 @@
+.route-page .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.route-mode-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mode-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: var(--card);
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mode-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.mode-btn svg {
+  width: 22px;
+  height: 22px;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.mode-btn.active svg {
+  color: var(--accent);
+}
+
+.mode-btn span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.mode-btn.active span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.route-waypoints {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.waypoint-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.waypoint-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.waypoint-number.start {
+  background: var(--green-gradient);
+  color: white;
+}
+
+.waypoint-number.end {
+  background: var(--orange-light);
+  color: var(--orange);
+}
+
+.waypoint-number:not(.start):not(.end) {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.waypoint-info {
+  flex: 1;
+}
+
+.waypoint-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.waypoint-info p {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.waypoint-delete {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.waypoint-delete:hover {
+  background: var(--red-light);
+}
+
+.waypoint-delete svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-tertiary);
+}
+
+.waypoint-delete:hover svg {
+  color: var(--red);
+}
+
+.waypoint-connector {
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(to bottom, var(--accent), rgba(45, 156, 219, 0.2));
+  margin-left: 36px;
+}
+
+.add-waypoint-btn {
+  margin: 16px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.add-waypoint-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.add-waypoint-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.route-summary {
+  display: flex;
+  justify-content: space-around;
+  margin: 16px 0;
+}
+
+.route-summary-item {
+  text-align: center;
+}
+
+.route-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.route-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.start-route-btn {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+}
+
+.start-route-btn svg {
+  width: 20px;
+  height: 20px;
+}
