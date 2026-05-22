@@ -1,3 +1,7 @@
+/**
+ * 历史记录页面
+ * 按日期分组展示模拟历史，包含统计摘要和清空功能
+ */
 import { useMemo, useCallback } from 'react';
 import { useHistoryStore } from '../store';
 import { formatCoordinate, formatDuration } from '../utils/map';
@@ -6,7 +10,7 @@ import './HistoryPage.css';
 export default function HistoryPage() {
   const { history, clearHistory } = useHistoryStore();
 
-  // 使用 useMemo 优化计算
+  /** 按日期分组历史记录并计算统计数据 */
   const { groupedHistory, stats } = useMemo(() => {
     // 按日期分组
     const grouped = history.reduce((acc, item) => {
@@ -16,7 +20,7 @@ export default function HistoryPage() {
       return acc;
     }, {} as Record<string, typeof history>);
 
-    // 统计数据
+    // 统计数据：总模拟次数、累计时长、不同地点数
     const totalDuration = history.reduce((sum, item) => sum + item.duration, 0);
     const uniqueLocations = new Set(history.map((h) => h.name)).size;
 
@@ -30,6 +34,7 @@ export default function HistoryPage() {
     };
   }, [history]);
 
+  /** 清空历史记录（需用户确认） */
   const handleClear = useCallback(() => {
     if (confirm('确定要清空所有历史记录吗？')) {
       clearHistory();
@@ -47,6 +52,7 @@ export default function HistoryPage() {
         )}
       </div>
 
+      {/* 统计卡片 */}
       <div className="history-stats">
         <div className="stat-card">
           <div className="stat-value">{stats.totalSimulations}</div>
@@ -62,6 +68,7 @@ export default function HistoryPage() {
         </div>
       </div>
 
+      {/* 按日期分组的历史列表 */}
       {Object.entries(groupedHistory).map(([date, items]) => (
         <div key={date} className="history-section">
           <div className="history-section-title">{date}</div>
@@ -90,6 +97,7 @@ export default function HistoryPage() {
         </div>
       ))}
 
+      {/* 空状态提示 */}
       {history.length === 0 && (
         <div className="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

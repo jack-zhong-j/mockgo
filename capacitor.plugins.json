@@ -1,0 +1,9 @@
+{
+  "plugins": {
+    "MockLocation": {
+      "android": {
+        "class": "com.mockgo.app.plugins.MockLocationPlugin"
+      }
+    }
+  }
+}

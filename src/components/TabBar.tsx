@@ -1,6 +1,11 @@
+/**
+ * 底部导航栏组件
+ * 包含五个标签页：定位、收藏、路线、历史、设置
+ */
 import { NavLink } from 'react-router-dom';
 import './TabBar.css';
 
+/** 标签页配置 */
 const tabs = [
   { path: '/', icon: 'location', label: '定位' },
   { path: '/favorites', icon: 'bookmark', label: '收藏' },
@@ -9,6 +14,7 @@ const tabs = [
   { path: '/settings', icon: 'settings', label: '设置' },
 ];
 
+/** 标签页图标 SVG 映射 */
 const icons: Record<string, JSX.Element> = {
   location: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -50,6 +56,7 @@ export default function TabBar() {
           to={tab.path}
           className={({ isActive }) => `tab-item ${isActive ? 'active' : ''} ${tab.center ? 'center-tab' : ''}`}
         >
+          {/* 中间的路线按钮使用特殊样式 */}
           {tab.center ? (
             <div className="center-btn">{icons[tab.icon]}</div>
           ) : (

@@ -14,7 +14,8 @@
 
 .search-bar {
   position: fixed;
-  top: 64px;
+  top: calc(44px + env(safe-area-inset-top));
+  top: calc(44px + constant(safe-area-inset-top));
   left: 16px;
   right: 16px;
   z-index: 20;
@@ -49,16 +50,22 @@
 
 .coord-input-bar {
   position: fixed;
-  bottom: 100px;
+  bottom: calc(100px + env(safe-area-inset-bottom));
+  bottom: calc(100px + constant(safe-area-inset-bottom));
   left: 16px;
   right: 16px;
   z-index: 20;
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .coord-input-bar .input {
   flex: 1;
+}
+
+.coord-input-bar .btn-secondary svg {
+  width: 18px;
+  height: 18px;
 }
 
 .coord-display {
@@ -132,7 +139,8 @@
 
 .mock-toggle {
   position: fixed;
-  bottom: 180px;
+  bottom: calc(180px + env(safe-area-inset-bottom));
+  bottom: calc(180px + constant(safe-area-inset-bottom));
   left: 16px;
   right: 16px;
   z-index: 20;
@@ -194,4 +202,88 @@
 .mock-toggle-text p {
   font-size: 12px;
   color: var(--text-tertiary);
+}
+
+@media (max-width: 375px) {
+  .search-bar {
+    top: calc(36px + env(safe-area-inset-top));
+    top: calc(36px + constant(safe-area-inset-top));
+    padding: 10px 14px;
+  }
+
+  .search-bar input {
+    font-size: 13px;
+  }
+
+  .coord-display {
+    top: calc(96px + env(safe-area-inset-top));
+    top: calc(96px + constant(safe-area-inset-top));
+    padding: 6px 12px;
+  }
+
+  .coord-text {
+    font-size: 11px;
+  }
+
+  .mock-indicator {
+    top: calc(36px + env(safe-area-inset-top));
+    top: calc(36px + constant(safe-area-inset-top));
+    padding: 4px 12px;
+    font-size: 11px;
+  }
+
+  .mock-toggle {
+    bottom: calc(160px + env(safe-area-inset-bottom));
+    bottom: calc(160px + constant(safe-area-inset-bottom));
+  }
+
+  .mock-toggle-card {
+    padding: 14px 16px;
+  }
+
+  .mock-toggle-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mock-toggle-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mock-toggle-text h3 {
+    font-size: 14px;
+  }
+
+  .mock-toggle-text p {
+    font-size: 11px;
+  }
+
+  .coord-input-bar {
+    bottom: calc(88px + env(safe-area-inset-bottom));
+    bottom: calc(88px + constant(safe-area-inset-bottom));
+    gap: 8px;
+  }
+
+  .coord-input-bar .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+.mock-error {
+  position: fixed;
+  bottom: calc(260px + env(safe-area-inset-bottom));
+  bottom: calc(260px + constant(safe-area-inset-bottom));
+  left: 16px;
+  right: 16px;
+  padding: 12px 16px;
+  background: var(--red-light);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  color: var(--red);
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  z-index: 30;
+  animation: fadeIn 0.3s ease;
 }

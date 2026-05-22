@@ -40,11 +40,14 @@ html, body {
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 #root {
   min-height: 100vh;
-  padding-bottom: 88px;
+  padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  padding-bottom: calc(88px + constant(safe-area-inset-bottom));
 }
 
 /* 页面容器 */
@@ -60,7 +63,8 @@ html, body {
 
 /* 页面标题 */
 .page-header {
-  padding: 64px 0 16px;
+  padding: calc(52px + env(safe-area-inset-top)) 0 16px;
+  padding: calc(52px + constant(safe-area-inset-top)) 0 16px;
 }
 
 .page-header h1 {
@@ -73,6 +77,21 @@ html, body {
   font-size: 13px;
   color: var(--text-tertiary);
   margin-top: 4px;
+}
+
+@media (max-width: 375px) {
+  .page-header {
+    padding: calc(44px + env(safe-area-inset-top)) 0 14px;
+    padding: calc(44px + constant(safe-area-inset-top)) 0 14px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .page-header p {
+    font-size: 12px;
+  }
 }
 
 /* 卡片 */

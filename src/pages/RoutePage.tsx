@@ -1,9 +1,13 @@
+/**
+ * 路线规划页面
+ * 支持多途经点添加、移动模式选择和路线模拟
+ */
 import { useCallback } from 'react';
 import { useRouteStore, useMockStore } from '../store';
 import type { MoveMode } from '../types';
 import './RoutePage.css';
 
-// 静态数据移到组件外
+/** 移动模式对应的图标 */
 const MODE_ICONS: Record<MoveMode, JSX.Element> = {
   walk: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -34,6 +38,7 @@ const MODE_ICONS: Record<MoveMode, JSX.Element> = {
   ),
 };
 
+/** 移动模式对应的中文标签 */
 const MODE_LABELS: Record<MoveMode, string> = {
   walk: '步行',
   bike: '骑行',
@@ -45,12 +50,14 @@ export default function RoutePage() {
   const { waypoints, moveMode, addWaypoint, removeWaypoint, setMoveMode, clearRoute } = useRouteStore();
   const { setTarget } = useMockStore();
 
+  /** 开始路线模拟：将第一个途经点设为目标坐标 */
   const handleStartRoute = useCallback(() => {
     if (waypoints.length > 0) {
       setTarget(waypoints[0].coordinate);
     }
   }, [waypoints, setTarget]);
 
+  /** 添加新途经点（默认坐标为北京） */
   const handleAddWaypoint = useCallback(() => {
     addWaypoint({
       name: `途经点 ${waypoints.length + 1}`,
@@ -60,10 +67,12 @@ export default function RoutePage() {
     });
   }, [addWaypoint, waypoints.length]);
 
+  /** 切换移动模式 */
   const handleModeChange = useCallback((mode: MoveMode) => {
     setMoveMode(mode);
   }, [setMoveMode]);
 
+  /** 删除途经点 */
   const handleRemove = useCallback((id: string) => {
     removeWaypoint(id);
   }, [removeWaypoint]);
@@ -79,6 +88,7 @@ export default function RoutePage() {
         )}
       </div>
 
+      {/* 移动模式选择器 */}
       <div className="route-mode-selector">
         {(Object.keys(MODE_ICONS) as MoveMode[]).map((mode) => (
           <button
@@ -93,6 +103,7 @@ export default function RoutePage() {
         ))}
       </div>
 
+      {/* 途经点列表 */}
       <div className="route-waypoints">
         {waypoints.map((wp, index) => (
           <div key={wp.id}>
@@ -111,11 +122,13 @@ export default function RoutePage() {
                 </svg>
               </button>
             </div>
+            {/* 途经点之间的连接线 */}
             {index < waypoints.length - 1 && <div className="waypoint-connector" />}
           </div>
         ))}
       </div>
 
+      {/* 添加途经点按钮 */}
       <button
         className="add-waypoint-btn"
         onClick={handleAddWaypoint}
@@ -128,6 +141,7 @@ export default function RoutePage() {
         添加途经点
       </button>
 
+      {/* 路线摘要和开始按钮（至少2个途经点时显示） */}
       {waypoints.length >= 2 && (
         <>
           <div className="route-summary card">
@@ -154,6 +168,7 @@ export default function RoutePage() {
         </>
       )}
 
+      {/* 空状态提示 */}
       {waypoints.length === 0 && (
         <div className="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

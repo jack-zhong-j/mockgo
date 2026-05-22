@@ -1,3 +1,7 @@
+/**
+ * 设置页面
+ * 包含用户信息、通用设置、模拟设置和关于信息
+ */
 import { useSettingsStore } from '../store';
 import './SettingsPage.css';
 
@@ -10,7 +14,7 @@ export default function SettingsPage() {
         <h1>设置</h1>
       </div>
 
-      {/* 用户信息 */}
+      {/* 用户信息卡片 */}
       <div className="settings-profile card">
         <div className="settings-avatar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -25,10 +29,11 @@ export default function SettingsPage() {
         <span className="settings-badge">Pro</span>
       </div>
 
-      {/* 通用设置 */}
+      {/* 通用设置组 */}
       <div className="settings-group">
         <div className="settings-group-title">通用</div>
         <div className="settings-group-card">
+          {/* 外观设置 */}
           <div className="setting-item">
             <div className="setting-icon blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -48,6 +53,7 @@ export default function SettingsPage() {
             <span className="setting-value">浅色</span>
           </div>
 
+          {/* 隐私保护开关 */}
           <div className="setting-item">
             <div className="setting-icon green">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -66,6 +72,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* 通知提醒开关 */}
           <div className="setting-item">
             <div className="setting-icon orange">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -87,10 +94,11 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* 模拟设置 */}
+      {/* 模拟设置组 */}
       <div className="settings-group">
         <div className="settings-group-title">模拟设置</div>
         <div className="settings-group-card">
+          {/* 模拟精度 */}
           <div className="setting-item">
             <div className="setting-icon purple">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -105,6 +113,7 @@ export default function SettingsPage() {
             <span className="setting-value">±{settings.accuracy}m</span>
           </div>
 
+          {/* 移动速度 */}
           <div className="setting-item">
             <div className="setting-icon blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -122,7 +131,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* 关于 */}
+      {/* 关于信息 */}
       <div className="settings-group">
         <div className="settings-group-title">关于</div>
         <div className="settings-group-card">

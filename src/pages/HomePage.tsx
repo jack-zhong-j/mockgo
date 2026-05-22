@@ -1,10 +1,21 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useMockStore } from '../store';
 import { loadTencentMap, formatCoordinate, parseCoordinate, MAP_CONFIG } from '../utils/map';
+import MockLocation from '../plugins/MockLocationPlugin';
+import type { TMapGeocoderResult, TMapLatLng, TMapMapOptions } from '../types';
 import './HomePage.css';
 
 // 腾讯地图类型声明
-declare const TMap: any;
+declare const TMap: {
+  Map: new (container: HTMLDivElement, options: TMapMapOptions) => any;
+  LatLng: new (lat: number, lng: number) => TMapLatLng;
+  MultiMarker: new (options: { map: any; geometries: Array<{ id: string; position: TMapLatLng }> }) => any;
+  service: {
+    Geocoder: new () => {
+      getLocation: (options: { address: string }) => Promise<TMapGeocoderResult>;
+    };
+  };
+};
 
 export default function HomePage() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -13,8 +24,52 @@ export default function HomePage() {
   const [coordInput, setCoordInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [mockError, setMockError] = useState<string | null>(null);
   
   const { isActive, targetCoordinate, setTarget, toggleMock } = useMockStore();
+
+  // 处理模拟开关切换
+  const handleToggleMock = useCallback(async () => {
+    if (isActive) {
+      try {
+        await MockLocation.stopMocking();
+        toggleMock();
+        setMockError(null);
+      } catch (err: any) {
+        console.error('停止模拟失败:', err);
+        const msg = err.message || '停止模拟失败';
+        if (msg.includes('not implemented')) {
+          setMockError('插件未正确安装，请重新安装应用');
+        } else {
+          setMockError(msg);
+        }
+      }
+    } else {
+      if (!targetCoordinate) {
+        setMockError('请先选择一个位置');
+        return;
+      }
+      try {
+        await MockLocation.startMocking({
+          lat: targetCoordinate.lat,
+          lng: targetCoordinate.lng,
+        });
+        toggleMock();
+        setMockError(null);
+      } catch (err: any) {
+        console.error('启动模拟失败:', err);
+        let msg = err.message || '启动模拟位置失败';
+        if (msg.includes('not implemented')) {
+          msg = '插件未正确安装，请重新安装应用';
+        } else if (msg.includes('开发者选项')) {
+          msg = '请在开发者选项中开启允许模拟位置';
+        } else if (msg.includes('权限')) {
+          msg = '请授予定位权限';
+        }
+        setMockError(msg);
+      }
+    }
+  }, [isActive, targetCoordinate, toggleMock]);
 
   // 处理地图点击选点
   const handleMapClick = useCallback((evt: any) => {
@@ -83,6 +138,14 @@ export default function HomePage() {
     });
 
     mapInstance.current.setCenter(new TMap.LatLng(targetCoordinate.lat, targetCoordinate.lng));
+
+    // 组件卸载时清理标记点，防止内存泄漏
+    return () => {
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+        markerRef.current = null;
+      }
+    };
   }, [targetCoordinate]);
 
   // 坐标输入处理
@@ -93,16 +156,61 @@ export default function HomePage() {
     }
   }, [coordInput, setTarget]);
 
+  // 获取当前真实位置
+  const handleGetCurrentLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      setError('您的浏览器不支持地理定位');
+      return;
+    }
+    
+    setError('正在获取位置...');
+    
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        
+        setTarget({ lat, lng });
+        setCoordInput(`${lat.toFixed(6)}, ${lng.toFixed(6)}`);
+        setError(null);
+      },
+      (error) => {
+        console.error('获取位置失败:', error);
+        const errorMessages: Record<number, string> = {
+          1: '用户拒绝了位置权限',
+          2: '无法获取位置信息',
+          3: '获取位置超时',
+        };
+        setError(errorMessages[error.code] || '获取位置失败，请检查定位权限');
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      }
+    );
+  }, [setTarget]);
+
   // 搜索地点
   const handleSearch = useCallback(() => {
     if (!searchQuery.trim() || !mapInstance.current) return;
     
     const geocoder = new TMap.service.Geocoder();
-    geocoder.getLocation({ address: searchQuery }).then((result: any) => {
-      const location = result.result.location;
-      setTarget({ lat: location.lat, lng: location.lng });
-      setCoordInput(`${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`);
-    });
+    geocoder.getLocation({ address: searchQuery })
+      .then((result: any) => {
+        if (result && result.result && result.result.location) {
+          const location = result.result.location;
+          setTarget({ lat: location.lat, lng: location.lng });
+          setCoordInput(`${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`);
+          setError(null);
+        } else {
+          setError('未找到该地点');
+        }
+      })
+      .catch((err: any) => {
+        console.error('搜索失败:', err);
+        setError('搜索失败，请检查网络或尝试其他地点');
+      });
   }, [searchQuery, setTarget]);
 
   return (
@@ -147,7 +255,14 @@ export default function HomePage() {
           onChange={(e) => setCoordInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleCoordSubmit()}
         />
-        <button className="btn btn-primary" onClick={handleCoordSubmit}>
+        <button className="btn btn-secondary" onClick={handleGetCurrentLocation} aria-label="获取当前位置">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="6" />
+            <circle cx="12" cy="12" r="2" />
+          </svg>
+        </button>
+        <button className="btn btn-primary" onClick={handleCoordSubmit} aria-label="定位到该坐标">
           定位
         </button>
       </div>
@@ -188,9 +303,15 @@ export default function HomePage() {
               <p>{isActive ? '当前：模拟位置' : '当前：真实位置'}</p>
             </div>
           </div>
-          <div className={`toggle ${isActive ? 'on' : ''}`} onClick={toggleMock}>
+          <div className={`toggle ${isActive ? 'on' : ''}`} onClick={handleToggleMock}>
             <div className="toggle-knob" />
           </div>
+          
+          {mockError && (
+            <div className="mock-error">
+              {mockError}
+            </div>
+          )}
         </div>
       </div>
     </div>

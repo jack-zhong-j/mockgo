@@ -1,10 +1,14 @@
+/**
+ * 收藏地点页面
+ * 支持搜索、分类筛选、选择定位和删除收藏
+ */
 import { useState, useMemo, useCallback } from 'react';
 import { useFavoriteStore, useMockStore } from '../store';
 import { formatCoordinate } from '../utils/map';
 import type { Favorite } from '../types';
 import './FavoritesPage.css';
 
-// 静态数据移到组件外
+/** 收藏分类对应的图标 */
 const CATEGORY_ICONS: Record<string, JSX.Element> = {
   home: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -34,6 +38,7 @@ const CATEGORY_ICONS: Record<string, JSX.Element> = {
   ),
 };
 
+/** 收藏分类对应的颜色主题 */
 const CATEGORY_COLORS: Record<string, string> = {
   home: 'blue',
   work: 'green',
@@ -41,6 +46,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   other: 'purple',
 };
 
+/** 收藏分类对应的中文标签 */
 const CATEGORY_LABELS: Record<string, string> = {
   home: '家',
   work: '公司',
@@ -54,7 +60,7 @@ export default function FavoritesPage() {
   const [search, setSearch] = useState('');
   const [activeTag, setActiveTag] = useState('全部');
 
-  // 使用 useMemo 优化过滤计算
+  /** 根据搜索关键词和分类标签过滤收藏列表 */
   const filteredFavorites = useMemo(() => {
     return favorites.filter((fav) => {
       const matchSearch = fav.name.includes(search) || fav.address.includes(search);
@@ -63,10 +69,12 @@ export default function FavoritesPage() {
     });
   }, [favorites, search, activeTag]);
 
+  /** 选择收藏地点并设为目标坐标 */
   const handleSelect = useCallback((fav: Favorite) => {
     setTarget(fav.coordinate);
   }, [setTarget]);
 
+  /** 删除收藏地点（阻止事件冒泡） */
   const handleRemove = useCallback((e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     removeFavorite(id);
@@ -79,6 +87,7 @@ export default function FavoritesPage() {
         <p>共 {favorites.length} 个收藏</p>
       </div>
 
+      {/* 搜索栏 */}
       <div className="search-filter">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="11" cy="11" r="8" />
@@ -92,6 +101,7 @@ export default function FavoritesPage() {
         />
       </div>
 
+      {/* 分类标签筛选 */}
       <div className="fav-tags">
         {['全部', '家', '公司', '旅行', '其他'].map((tag) => (
           <span
@@ -104,6 +114,7 @@ export default function FavoritesPage() {
         ))}
       </div>
 
+      {/* 收藏列表 */}
       <div className="fav-list">
         {filteredFavorites.map((fav) => (
           <div key={fav.id} className="card fav-card" onClick={() => handleSelect(fav)}>
@@ -128,6 +139,7 @@ export default function FavoritesPage() {
           </div>
         ))}
 
+        {/* 空状态提示 */}
         {filteredFavorites.length === 0 && (
           <div className="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
