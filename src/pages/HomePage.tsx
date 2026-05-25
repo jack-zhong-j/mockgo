@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useMockStore } from '../store';
+import { useMockStore, useHistoryStore } from '../store';
 import { loadTencentMap, formatCoordinate, parseCoordinate, MAP_CONFIG } from '../utils/map';
 import MockLocation from '../plugins/MockLocationPlugin';
 import type { TMapGeocoderResult, TMapLatLng, TMapMapOptions } from '../types';
@@ -25,16 +25,32 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [mockError, setMockError] = useState<string | null>(null);
+  // 模拟开始时间（用于记录历史）
+  const [mockStartTime, setMockStartTime] = useState<number | null>(null);
   
   const { isActive, targetCoordinate, setTarget, toggleMock } = useMockStore();
+  const { addHistory } = useHistoryStore();
 
   // 处理模拟开关切换
   const handleToggleMock = useCallback(async () => {
     if (isActive) {
+      // 停止模拟
       try {
         await MockLocation.stopMocking();
         toggleMock();
         setMockError(null);
+        
+        // 记录历史记录
+        if (mockStartTime && targetCoordinate) {
+          const duration = Math.round((Date.now() - mockStartTime) / 60000);
+          addHistory({
+            name: '单点模拟定位',
+            coordinate: targetCoordinate,
+            startTime: mockStartTime,
+            duration,
+          });
+        }
+        setMockStartTime(null);
       } catch (err: any) {
         console.error('停止模拟失败:', err);
         const msg = err.message || '停止模拟失败';
@@ -45,6 +61,7 @@ export default function HomePage() {
         }
       }
     } else {
+      // 启动模拟
       if (!targetCoordinate) {
         setMockError('请先选择一个位置');
         return;
@@ -56,6 +73,8 @@ export default function HomePage() {
         });
         toggleMock();
         setMockError(null);
+        // 记录模拟开始时间
+        setMockStartTime(Date.now());
       } catch (err: any) {
         console.error('启动模拟失败:', err);
         let msg = err.message || '启动模拟位置失败';
@@ -69,7 +88,7 @@ export default function HomePage() {
         setMockError(msg);
       }
     }
-  }, [isActive, targetCoordinate, toggleMock]);
+  }, [isActive, targetCoordinate, toggleMock, mockStartTime, addHistory]);
 
   // 处理地图点击选点
   const handleMapClick = useCallback((evt: any) => {

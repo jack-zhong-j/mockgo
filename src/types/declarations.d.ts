@@ -32,3 +32,12 @@ declare module '*.png' {
   const content: string;
   export default content;
 }
+
+// Vite environment variables
+interface ImportMetaEnv {
+  readonly VITE_TENCENT_MAP_KEY: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
