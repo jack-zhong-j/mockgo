@@ -1,20 +1,14 @@
-/**
- * 底部导航栏组件
- * 包含五个标签页：定位、收藏、路线、历史、设置
- */
 import { NavLink } from 'react-router-dom';
 import './TabBar.css';
 
-/** 标签页配置 */
 const tabs = [
-  { path: '/', icon: 'location', label: '定位' },
-  { path: '/favorites', icon: 'bookmark', label: '收藏' },
-  { path: '/route', icon: 'route', label: '路线', center: true },
-  { path: '/history', icon: 'history', label: '历史' },
-  { path: '/settings', icon: 'settings', label: '设置' },
+  { path: '/', icon: 'location', label: '定位', ariaLabel: '定位页面' },
+  { path: '/favorites', icon: 'bookmark', label: '收藏', ariaLabel: '收藏页面' },
+  { path: '/route', icon: 'route', label: '路线', center: true, ariaLabel: '路线规划页面' },
+  { path: '/history', icon: 'history', label: '历史', ariaLabel: '历史记录页面' },
+  { path: '/settings', icon: 'settings', label: '设置', ariaLabel: '设置页面' },
 ];
 
-/** 标签页图标 SVG 映射 */
 const icons: Record<string, JSX.Element> = {
   location: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -47,23 +41,30 @@ const icons: Record<string, JSX.Element> = {
   ),
 };
 
+function TabItem({ path, icon, label, ariaLabel, center }: typeof tabs[0]) {
+  return (
+    <NavLink
+      key={path}
+      to={path}
+      className={({ isActive }) => `tab-item ${isActive ? 'active' : ''} ${center ? 'center-tab' : ''}`}
+      aria-label={ariaLabel}
+      aria-current="page"
+    >
+      {center ? (
+        <div className="center-btn">{icons[icon]}</div>
+      ) : (
+        icons[icon]
+      )}
+      <span>{label}</span>
+    </NavLink>
+  );
+}
+
 export default function TabBar() {
   return (
-    <nav className="tab-bar">
+    <nav className="tab-bar" aria-label="底部导航">
       {tabs.map((tab) => (
-        <NavLink
-          key={tab.path}
-          to={tab.path}
-          className={({ isActive }) => `tab-item ${isActive ? 'active' : ''} ${tab.center ? 'center-tab' : ''}`}
-        >
-          {/* 中间的路线按钮使用特殊样式 */}
-          {tab.center ? (
-            <div className="center-btn">{icons[tab.icon]}</div>
-          ) : (
-            icons[tab.icon]
-          )}
-          <span>{tab.label}</span>
-        </NavLink>
+        <TabItem key={tab.path} {...tab} />
       ))}
     </nav>
   );

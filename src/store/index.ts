@@ -2,10 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Favorite, HistoryItem, Waypoint, AppSettings, Coordinate, MoveMode } from '../types';
 
-/** 生成唯一ID */
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
-// ===== 模拟状态 Store =====
 interface MockStore {
   isActive: boolean;
   currentCoordinate: Coordinate | null;
@@ -29,14 +27,13 @@ export const useMockStore = create<MockStore>()(
   )
 );
 
-// ===== 收藏 Store =====
+export const useIsMockActive = () => useMockStore((s) => s.isActive);
+export const useTargetCoordinate = () => useMockStore((s) => s.targetCoordinate);
+
 interface FavoriteStore {
   favorites: Favorite[];
-  /** 添加收藏 */
   addFavorite: (fav: Omit<Favorite, 'id' | 'createdAt'>) => void;
-  /** 删除收藏 */
   removeFavorite: (id: string) => void;
-  /** 更新收藏信息 */
   updateFavorite: (id: string, updates: Partial<Favorite>) => void;
 }
 
@@ -66,12 +63,11 @@ export const useFavoriteStore = create<FavoriteStore>()(
   )
 );
 
-// ===== 历史记录 Store =====
+export const useFavoriteCount = () => useFavoriteStore((s) => s.favorites.length);
+
 interface HistoryStore {
   history: HistoryItem[];
-  /** 添加历史记录（最多保留100条） */
   addHistory: (item: Omit<HistoryItem, 'id'>) => void;
-  /** 清空所有历史记录 */
   clearHistory: () => void;
 }
 
@@ -89,19 +85,15 @@ export const useHistoryStore = create<HistoryStore>()(
   )
 );
 
-// ===== 路线 Store =====
+export const useHistoryCount = () => useHistoryStore((s) => s.history.length);
+
 interface RouteStore {
   waypoints: Waypoint[];
   moveMode: MoveMode;
-  /** 添加途经点 */
   addWaypoint: (wp: Omit<Waypoint, 'id'>) => void;
-  /** 删除途经点 */
   removeWaypoint: (id: string) => void;
-  /** 更新途经点信息 */
   updateWaypoint: (id: string, updates: Partial<Waypoint>) => void;
-  /** 设置移动模式 */
   setMoveMode: (mode: MoveMode) => void;
-  /** 清空路线 */
   clearRoute: () => void;
 }
 
@@ -126,8 +118,8 @@ export const useRouteStore = create<RouteStore>((set) => ({
   clearRoute: () => set({ waypoints: [] }),
 }));
 
-// ===== 设置 Store =====
-/** 默认应用设置 */
+export const useWaypointCount = () => useRouteStore((s) => s.waypoints.length);
+
 const defaultSettings: AppSettings = {
   theme: 'light',
   privacyMode: true,
@@ -138,7 +130,6 @@ const defaultSettings: AppSettings = {
 
 interface SettingsStore {
   settings: AppSettings;
-  /** 更新设置项 */
   updateSettings: (updates: Partial<AppSettings>) => void;
 }
 

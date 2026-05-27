@@ -159,20 +159,11 @@ public class MockLocationPlugin extends Plugin {
 
     /**
      * 检查模拟位置权限
-     * Android 12+ (API 31): 通过 ApplicationInfo.isMockLocationProvider() 检测
-     * Android 12 以下: 通过 Settings.Secure.ALLOW_MOCK_LOCATION 检测
+     * 在 Android 12+ 中，模拟位置权限通过开发者选项设置，无法在代码中直接检测
+     * 这里返回 true，实际权限问题会在调用 startMocking 时抛出异常处理
      */
     private boolean checkMockLocationPermission(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // Android 12+ 使用 isMockLocationProvider 检测
-            try {
-                ApplicationInfo appInfo = context.getApplicationInfo();
-                return appInfo.isMockLocationProvider();
-            } catch (Exception e) {
-                Log.w(TAG, "检测模拟位置权限失败", e);
-                return false;
-            }
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
             // Android 12 以下使用 ALLOW_MOCK_LOCATION 设置
             try {
                 String mockLocationSetting = Settings.Secure.getString(
@@ -185,6 +176,8 @@ public class MockLocationPlugin extends Plugin {
                 return false;
             }
         }
+        // Android 12+ 无法在代码中直接检测，返回 true 让运行时处理
+        return true;
     }
 
     /**

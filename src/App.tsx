@@ -1,29 +1,73 @@
-/**
- * MockGo 应用根组件
- * 配置路由和底部导航栏
- */
+import { lazy, Suspense, Profiler, type ProfilerOnRenderCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import TabBar from './components/TabBar';
-import HomePage from './pages/HomePage';
-import FavoritesPage from './pages/FavoritesPage';
-import HistoryPage from './pages/HistoryPage';
-import RoutePage from './pages/RoutePage';
-import SettingsPage from './pages/SettingsPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import './index.css';
+
+const HomePage = lazy(() => import('./pages/HomePage'));
+const FavoritesPage = lazy(() => import('./pages/FavoritesPage'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage'));
+const RoutePage = lazy(() => import('./pages/RoutePage'));
+const SettingsPage = lazy(() => import('./pages/SettingsPage'));
+
+const onRenderCallback: ProfilerOnRenderCallback = (
+  id,
+  phase,
+  actualDuration
+) => {
+  console.log(`[Profiler] ${id} - ${phase}: ${actualDuration.toFixed(2)}ms`);
+};
 
 export default function App() {
   return (
-    <BrowserRouter>
-      {/* 页面路由配置 */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/favorites" element={<FavoritesPage />} />
-        <Route path="/history" element={<HistoryPage />} />
-        <Route path="/route" element={<RoutePage />} />
-        <Route path="/settings" element={<SettingsPage />} />
-      </Routes>
-      {/* 底部导航栏 */}
-      <TabBar />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Suspense fallback={<div className="loading">加载中...</div>}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Profiler id="HomePage" onRender={onRenderCallback}>
+                  <HomePage />
+                </Profiler>
+              }
+            />
+            <Route
+              path="/favorites"
+              element={
+                <Profiler id="FavoritesPage" onRender={onRenderCallback}>
+                  <FavoritesPage />
+                </Profiler>
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <Profiler id="HistoryPage" onRender={onRenderCallback}>
+                  <HistoryPage />
+                </Profiler>
+              }
+            />
+            <Route
+              path="/route"
+              element={
+                <Profiler id="RoutePage" onRender={onRenderCallback}>
+                  <RoutePage />
+                </Profiler>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <Profiler id="SettingsPage" onRender={onRenderCallback}>
+                  <SettingsPage />
+                </Profiler>
+              }
+            />
+          </Routes>
+        </Suspense>
+        <TabBar />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
